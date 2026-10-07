@@ -4,3 +4,6 @@ export const GOOGLE_CONFIG = Object.freeze({
   apiKey: 'AIzaSyCpwFf0y2gjUKmYa-ySG_Ab1QuB0XcrtGc',
   appId: '1039600601043'
 });
+
+export const OAUTH_REDIRECT_URI =
+  'https://davideceresa91.github.io/scan-sheet-v3.1/oauth-callback.html';
