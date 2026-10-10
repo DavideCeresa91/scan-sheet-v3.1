@@ -1,19 +1,42 @@
 <!doctype html>
 <html lang="it">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Scan Sheet — Google collegato</title></head>
-<body><p id="message">Completamento del collegamento Google…</p>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#923753">
+  <title>Barcode Bipper — Google collegato</title>
+  <style>body{font-family:system-ui,-apple-system,sans-serif;padding:32px;color:#172b23}p{max-width:34rem}</style>
+</head>
+<body>
+<p id="message">Completamento del collegamento Google…</p>
 <script>
 (function(){
   'use strict';
+  const RESULT_KEY = 'barcode-bipper:v1:oauth-result';
+  const RETURN_KEY = 'barcode-bipper:v1:return-after-oauth';
   const p = new URLSearchParams(location.search);
   const result = {
-    code: p.get('code') || '', state: p.get('state') || '', error: p.get('error') || '',
-    errorDescription: p.get('error_description') || '', at: Date.now()
+    code:p.get('code') || '',
+    state:p.get('state') || '',
+    error:p.get('error') || '',
+    errorDescription:p.get('error_description') || '',
+    at:Date.now()
   };
-  try { localStorage.setItem('scan-sheet:v3.1:oauth-result', JSON.stringify(result)); } catch (_) {}
-  try { if (window.opener) window.opener.postMessage({type:'scan-sheet:oauth-result', result}, location.origin); } catch (_) {}
-  document.getElementById('message').textContent = result.error ? 'Autorizzazione non completata. Torna a Scan Sheet.' : 'Google collegato. Torna a Scan Sheet.';
-  if (window.opener) setTimeout(() => window.close(), 250);
-  else setTimeout(() => location.replace('./?oauth=done'), 500);
+  try { localStorage.setItem(RESULT_KEY, JSON.stringify(result)); } catch (_) {}
+  try { if (window.opener) window.opener.postMessage({type:'barcode-bipper:oauth-result', result}, location.origin); } catch (_) {}
+
+  document.getElementById('message').textContent = result.error
+    ? 'Autorizzazione non completata. Torna a Barcode Bipper.'
+    : 'Google collegato. Torna a Barcode Bipper.';
+
+  if (window.opener) {
+    setTimeout(() => window.close(), 250);
+  } else {
+    let target = './';
+    try { target = localStorage.getItem(RETURN_KEY) || './'; localStorage.removeItem(RETURN_KEY); } catch (_) {}
+    setTimeout(() => location.replace(target), 500);
+  }
 })();
-</script></body></html>
+</script>
+</body>
+</html>
